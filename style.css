@@ -16,3 +16,56 @@ body {
   justify-content: center;
   align-items: center;
 }
+.game {
+  position: relative;
+  width: 960px;
+  height: 340px;
+
+  overflow: hidden;
+  background-image: linear-gradient(#001, #200);
+  box-shadow: 0 0 1em #fff1;
+}
+.player {
+  position: absolute;
+  /* render function we are creating later will set the position of the player */
+  top: var(--player-y, 320px);
+  left: var(--player-x, 480px);
+  transform: translate(-100%, -100%);
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+}
+
+.player.idle {
+  background-image: url("./player-idle.gif");
+}
+.player.run {
+  background-image: url("./player-run.gif");
+}
+.player.jump {
+  background-image: url("./player-jump.gif");
+}
+.player.dead {
+  background-image: url("./player-dead.gif");
+}
+/* https://www.youtube.com/watch?v=atxvy-FVz4Y */
+.road {
+  position: absolute;
+  bottom: 0;
+  width: calc(100% + 10px);
+  height: 20px;
+  background-image: linear-gradient(#555, #333);
+}
+.road::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #aaa 0px 5px,
+    #aaa0 5px 10px
+  );
+}
