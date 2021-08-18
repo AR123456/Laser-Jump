@@ -17,29 +17,77 @@ const player = {
   v: 0,
 };
 let gameStatus = "start";
-let speed, score, nextBuildingX, gameProgress, lastHeight;
+let speed, score, nextBuildingX, gameProgress, lastHeight, lastTime;
 
 //on click event - oculd add on keyboard type function
 gameContainer.addEventListener("click", () => {
   //swithch case turn game on if it is on jump
+  switch (gameStatus) {
+    case "start":
+    case "end":
+      startGame();
+      break;
+    case "on":
+      jump();
+      break;
+  }
 });
 // Game functions
 function startGame() {
   //reset all game variables
-  //start gane
+  buildings.splice(0, buildings.length);
+  buildingsDiv.innerHTML = "";
+  //player object
+  player.x = 480;
+  player.y = 0;
+  player.v = 0;
+  // Speed of game progress
+  speed = 1;
+  score = 0;
+  nextBuildingX = 960;
+  gameProgress = 0;
+  // of last building so jump is not too big
+  lastHeight = 0;
+
+  //start game
+  gameStatus = "on";
+  render();
 }
 
 function jump() {
   //controle velocity
 }
 function render() {
-  // main gamin function
-  // render building s
+  ////////////////////////////main gamin function
+  // set the delta time  https://www.youtube.com/watch?v=atxvy-FVz4Y
+  const thisTime = performance.now();
+  //   delta time
+  const dt = Math.min(32, Math.max(8, thisTime - lastTime)) / 16.666;
+  lastTime = thistime;
+  // render buildings
+  if (nextBuidingX < gameProgress + 960 + speed * dt) {
+    createBuildings();
+  }
   // render player
   // render road
   // render distroy buildings
   // render set progress and re render
+  // increase speed
+  speed += 0.001 * dt;
+  // game progress set to speed
+  gameProgress += speed * dt;
+  if (gameStatus === "on") {
+    requestAnimationFrame(render);
+  }
 }
 function createBuildings() {
-  //
+  //building object  and div
+  const building = {
+    x: nextBuildingX,
+    width: 60 + Math.random() * 60,
+    height: Math.min(
+      Math.max(30 + Math.round(Math.random() * 120), lastHeight - 30),
+      lastHeight + 30
+    ),
+  };
 }
