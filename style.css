@@ -69,3 +69,48 @@ body {
     #aaa0 5px 10px
   );
 }
+/* https://www.youtube.com/watch?v=atxvy-FVz4Y */
+.building {
+  position: absolute;
+  bottom: 20px;
+  left: var(--building-x, 960px);
+  border: solid #0007;
+  border-width: 0 1ps;
+}
+.building_fragment {
+  position: absolute;
+  width: 25%;
+  height: 33.334%;
+  background-image: url("./building02.png");
+  background-size: 1600% 300%;
+  filter: hue-rotate(var(--hue));
+}
+/* https://www.youtube.com/watch?v=atxvy-FVz4Y */
+.building_fragment:nth-child(4n + 1) {
+  left: 0%;
+  background-position-x: calc(var(--buildingImageX, 0%) + 0%);
+}
+.building_fragment:nth-child(4n + 2) {
+  left: 25%;
+  background-position-x: calc(var(--buildingImageX, 0%) + 6.25%);
+}
+.building_fragment:nth-child(4n + 3) {
+  left: 50%;
+  background-position-x: calc(var(--buildingImageX, 0%) + 12.5%);
+}
+.building_fragment:nth-child(4n + 4) {
+  left: 75%;
+  background-position-x: calc(var(--buildingImageX, 0%) + 18.75%);
+}
+.building_fragment:nth-child(n + 1):nth-child(-n + 4) {
+  top: 0%;
+  background-position-y: 0%;
+}
+.building_fragment:nth-child(n + 5):nth-child(-n + 8) {
+  top: 33.334%;
+  background-position-y: 50%;
+}
+.building_fragment:nth-child(n + 9):nth-child(-n + 12) {
+  top: 66.668%;
+  background-position-y: 100%;
+}

@@ -96,7 +96,12 @@ function createBuildings() {
   buildingDiv.style.width = building.width + "px";
   buildingDiv.style.height = buiding.height + "px";
   // style will need hue
-  buildingDiv.style.setProperty("--hue-angle", Math.random() * 360 + "deg");
+  buildingDiv.style.setProperty("--hue", Math.random() * 360 + "deg");
+  // https://www.youtube.com/watch?v=atxvy-FVz4Y
+  buildingDiv.style.setProperty(
+    "--buildingImageX",
+    Math.floor(Math.random() * 4) * 27.08333 + "%"
+  );
   for (let i = 0; i < 12; i++) {
     const fragmentDiv = document.createElement("div");
     fragmentDiv.classList = "building_fragment";
