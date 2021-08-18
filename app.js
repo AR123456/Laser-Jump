@@ -90,4 +90,28 @@ function createBuildings() {
       lastHeight + 30
     ),
   };
+  //   each of the 12 parts of the div will eventually explode in all directions
+  const buildingDiv = document.createElement("div");
+  buildingDiv.classList = "building";
+  buildingDiv.style.width = building.width + "px";
+  buildingDiv.style.height = buiding.height + "px";
+  // style will need hue
+  buildingDiv.style.setProperty("--hue-angle", Math.random() * 360 + "deg");
+  for (let i = 0; i < 12; i++) {
+    const fragmentDiv = document.createElement("div");
+    fragmentDiv.classList = "building_fragment";
+    fragmentDiv.style.setProperty("--tx", Math.random() * -120 + "px");
+    fragmentDiv.style.setProperty("--ty", Math.random() * -160 + "px");
+    fragmentDiv.style.setProperty("--rx", Math.random() * 360 + "deg");
+    fragmentDiv.style.setProperty("--ry", Math.random() * 360 + "deg");
+    fragmentDiv.style.setProperty("--rz", Math.random() * 360 + "deg");
+    // add fragments to the building div
+    buildingDiv.appendChild(fragmentDiv);
+  }
+  building.div = buildingDiv;
+  buildingsDiv.appendChild(buildingDiv);
+  buildings.push(building);
+  // add building width next building x
+  nextBuildingX += building.width;
+  lastHeight = building.height;
 }
