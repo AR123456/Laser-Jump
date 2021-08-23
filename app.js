@@ -35,9 +35,10 @@ gameContainer.addEventListener("click", () => {
 // Game functions
 function startGame() {
   //reset all game variables
+
   buildings.splice(0, buildings.length);
   buildingsDiv.innerHTML = "";
-  //player object
+
   player.x = 480;
   player.y = 0;
   player.v = 0;
@@ -48,7 +49,7 @@ function startGame() {
   gameProgress = 0;
   // of last building so jump is not too big
   lastHeight = 0;
-
+  lastTime = 0;
   //start game
   gameStatus = "on";
   render();
@@ -71,11 +72,11 @@ function render() {
   lastTime = thisTime;
   // render buildings
   if (nextBuildingX < gameProgress + 960 + speed * dt) {
-    createBuildings();
+    createBuilding();
   }
   //  https://www.youtube.com/watch?v=atxvy-FVz4Y
-  let base = 0;
-  const destroyBuildings = [];
+  let base = 0; // current building height
+  const destroyBuildings = []; // building that cross the 'destroy line'
   let nextBuilding = buildings[0];
 
   buildings.forEach((building, ix) => {
@@ -83,9 +84,11 @@ function render() {
       base = building.height;
       nextBuilding = buildings[ix + 1];
     }
+
     if (building.x < gameProgress + 180) {
       destroyBuildings.push(ix);
     }
+
     building.div.style.setProperty(
       "--building-x",
       building.x - gameProgress + "px"
@@ -94,27 +97,37 @@ function render() {
 
   // render player
   if (player.v > 0) {
-    player.y += player.v;
-    player.v = Math.max(0, player.v - g);
+    // is jumping
+    player.y += player.v * dt;
+    player.v = Math.max(0, player.v - g * dt);
+    playerDiv.classList = "player jump";
   } else if (base < player.y) {
-    // player is falling down here
-    player.y = Math.max(base, player.y + player.v);
-    player.v -= g;
-    //Thttps://www.youtube.com/watch?v=atxvy-FVz4Y
+    // is falling
+    player.y = Math.max(base, player.y + player.v * dt);
+    player.v -= g * dt;
+    playerDiv.classList = "player jump";
   } else {
+    // is running
     player.v = 0;
   }
+
   playerDiv.classList = `player ${player.v === 0 ? "run" : "jump"}`;
+
   let nextPlayerX = player.x + speed;
+
   if (nextPlayerX - gameProgress < 720) {
     nextPlayerX += 1 / speed;
   }
+
   if (nextPlayerX > nextBuilding.x && nextBuilding.height > player.y) {
     nextPlayerX = nextBuilding.x;
   }
+
   player.x = nextPlayerX;
+
   playerDiv.style.setProperty("--player-x", nextPlayerX - gameProgress + "px");
   playerDiv.style.setProperty("--player-y", 320 - player.y + "px");
+
   // TODO restart here https://www.youtube.com/watch?v=atxvy-FVz4Y
   // render road
   // render distroy buildings
@@ -131,43 +144,47 @@ function render() {
     requestAnimationFrame(render);
   }
 }
-function createBuildings() {
-  //building object  and div
-  const building = {
-    x: nextBuildingX,
-    width: 60 + Math.random() * 60,
-    height: Math.min(
-      Math.max(30 + Math.round(Math.random() * 120), lastHeight - 30),
-      lastHeight + 30
-    ),
-  };
-  //   each of the 12 parts of the div will eventually explode in all directions
+function createBuilding() {
+  const building = {};
+  building.x = nextBuildingX;
+  building.width = 60 + Math.round(Math.random() * 60);
+  building.height = Math.min(
+    Math.max(30 + Math.round(Math.random() * 120), lastHeight - 30),
+    lastHeight + 30
+  );
+
   const buildingDiv = document.createElement("div");
   buildingDiv.classList = "building";
   buildingDiv.style.width = building.width + "px";
   buildingDiv.style.height = building.height + "px";
-  // style will need hue
-  buildingDiv.style.setProperty("--hue", Math.random() * 360 + "deg");
-  // https://www.youtube.com/watch?v=atxvy-FVz4Y
+
+  buildingDiv.style.setProperty(
+    "--hue",
+    Math.round(Math.random() * 360) + "deg"
+  );
   buildingDiv.style.setProperty(
     "--buildingImageX",
     Math.floor(Math.random() * 4) * 27.08333 + "%"
   );
+
   for (let i = 0; i < 12; i++) {
     const fragmentDiv = document.createElement("div");
+
     fragmentDiv.classList = "building_fragment";
     fragmentDiv.style.setProperty("--tx", Math.random() * -120 + "px");
     fragmentDiv.style.setProperty("--ty", Math.random() * -160 + "px");
     fragmentDiv.style.setProperty("--rx", Math.random() * 360 + "deg");
     fragmentDiv.style.setProperty("--ry", Math.random() * 360 + "deg");
     fragmentDiv.style.setProperty("--rz", Math.random() * 360 + "deg");
-    // add fragments to the building div
+
     buildingDiv.appendChild(fragmentDiv);
   }
+
   building.div = buildingDiv;
+
   buildingsDiv.appendChild(buildingDiv);
   buildings.push(building);
-  // add building width next building x
+
   nextBuildingX += building.width;
   lastHeight = building.height;
 }
