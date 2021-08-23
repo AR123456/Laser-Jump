@@ -1,6 +1,6 @@
 // DOM  variables
-// const scoreDiv = document.querySelector(".score");
-// const msgDiv = document.querySelector(".msg");
+const scoreDiv = document.querySelector(".score");
+const msgDiv = document.querySelector(".msg");
 const gameContainer = document.querySelector(".game");
 const playerDiv = document.querySelector(".player");
 const buildingsDiv = document.querySelector(".buildings");
@@ -32,6 +32,12 @@ gameContainer.addEventListener("click", () => {
       break;
   }
 });
+// To use space bar or up arrow
+// document.addEventListener('keydown', (e) => {
+//     if((e.keyCode == 32) || (e.keyCode == 38)) {
+//     }
+// });
+
 // Game functions
 function startGame() {
   //reset all game variables
@@ -53,11 +59,15 @@ function startGame() {
   //start game
   gameStatus = "on";
   render();
+  msgDiv.innerHTML = `<h2>Escape the Laser!</h2>(Click to jump)`;
+  setTimeout(() => {
+    msgDiv.classList = "msg off";
+  }, 3000);
 }
 
 function jump() {
   //controle velocity
-  if (player.v === 0) {
+  if (player.v !== 0) {
     return false;
   }
   // ////////////////// the bigger this number the greater the velocity
@@ -70,6 +80,7 @@ function render() {
   //   delta time
   const dt = Math.min(32, Math.max(8, thisTime - lastTime)) / 16.666;
   lastTime = thisTime;
+
   // render buildings
   if (nextBuildingX < gameProgress + 960 + speed * dt) {
     createBuilding();
