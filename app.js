@@ -139,14 +139,15 @@ function render() {
 
   playerDiv.classList = `player ${player.v === 0 ? "run" : "jump"}`;
 
-  let nextPlayerX = player.x + speed;
+  let nextPlayerX = player.x + speed * dt;
 
   if (nextPlayerX - gameProgress < 720) {
-    nextPlayerX += 1 / speed;
+    nextPlayerX += (1 / speed) * dt;
   }
 
   if (nextPlayerX > nextBuilding.x && nextBuilding.height > player.y) {
     nextPlayerX = nextBuilding.x;
+    playerDiv.classList = "player idle";
   }
 
   player.x = nextPlayerX;
@@ -157,16 +158,36 @@ function render() {
   // TODO restart here https://www.youtube.com/watch?v=atxvy-FVz4Y
   // render road
   // render distroy buildings
+  destroyBuildings.forEach((ix) => {
+    const thisDiv = buildings[ix].div;
+    thisDiv.classList.add("distroy");
+    setTimeout(() => {
+      thisDiv.parentNode.removeChild(thisDiv);
+    }, 1000);
+    if (
+      player.x <= buildings[ix].x + buildings[ix].width &&
+      player.y <= buildings[ix].height
+    ) {
+      gameStatus = "dead";
+      playerDiv.classList = "player dead";
+      msgDiv.innerHTML = `<h2> Got Ya ! </h2>`;
+      msgDiv.classList = "msg";
+    } else {
+      buildings.splice(ix, 1);
+      score++;
+    }
+  });
+
   // /////////render set progress and re render
   // increase speed
-  // speed += 0.001 * dt;
-  // // game progress set to speed
-  // gameProgress += speed * dt;
   // console.log({ dt });
-  speed += 0.001;
-  gameProgress += speed;
+  speed += 0.001 * dt;
+  // // game progress set to speed
+  gameProgress += speed * dt;
+  // render score
+  scoreDiv.innerHTML = `Score: ${score}`;
 
-  if (gameStatus === "on") {
+  if (gameStatus === "on" || gameStatus === "dead") {
     requestAnimationFrame(render);
   }
 }
