@@ -116,3 +116,44 @@ body {
 }
 
 /* implementation of the lazer affect   https://www.youtube.com/watch?v=atxvy-FVz4Y */
+.building.destroy .building_fragment {
+  z-index: 100;
+  -webkit-animation: destroy 1s ease-out forwards;
+  animation: destroy 1s ease-out forwards;
+}
+@-webkit-keyframes destroy {
+  to {
+    transform: translateX(var(--tx)) translateY(var(--ty)) rotateX(var(--rx))
+      rotateY(var(--ry)) rotateZ(var(--rz));
+    opacity: 0;
+  }
+}
+@keyframes destroy {
+  to {
+    transform: translateX(var(--tx)) translateY(var(--ty)) rotateX(var(--rx))
+      rotateY(var(--ry)) rotateZ(var(--rz));
+    opacity: 0;
+  }
+}
+.building.destroy::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 5px);
+  right: 90%;
+  width: 320px;
+  height: 10px;
+  border-radius: 5px;
+  background-image: linear-gradient(#f000, #f00, #f000);
+  -webkit-animation: laserOff 0.5s ease-out forwards;
+  animation: laserOff 0.5s ease-out forwards;
+}
+@-webkit-keyframes laserOff {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes laserOff {
+  to {
+    opacity: 0;
+  }
+}
