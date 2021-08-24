@@ -81,6 +81,21 @@ function render() {
   const dt = Math.min(32, Math.max(8, thisTime - lastTime)) / 16.666;
   lastTime = thisTime;
 
+  // semi render for the end fall
+
+  if (gameStatus === "dead") {
+    if (player.y > 0) {
+      player.y = Math.max(0, player.y + player.v * dt);
+      player.v -= g * dt;
+      playerDiv.style.setProperty("--player-y", 320 - player.y + "px");
+      requestAnimationFrame(render);
+    } else {
+      gameStatus = "end";
+      msgDiv.innerHTML += `Click to restart`;
+    }
+    return false;
+  }
+
   // render buildings
   if (nextBuildingX < gameProgress + 960 + speed * dt) {
     createBuilding();
