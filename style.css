@@ -157,3 +157,23 @@ body {
     opacity: 0;
   }
 }
+.road {
+  position: absolute;
+  bottom: 0;
+  width: calc(100% + 10px);
+  height: 20px;
+  background-image: linear-gradient(#555, #333);
+}
+.road::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #aaa 0px 5px,
+    #aaa0 5px 10px
+  );
+}
