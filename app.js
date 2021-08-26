@@ -1,6 +1,6 @@
 // DOM  variables
-const scoreDiv = document.querySelector(".score");
-const msgDiv = document.querySelector(".msg");
+// const scoreDiv = document.querySelector(".score");
+// const msgDiv = document.querySelector(".msg");
 const gameContainer = document.querySelector(".game");
 const playerDiv = document.querySelector(".player");
 const buildingsDiv = document.querySelector(".buildings");
@@ -32,12 +32,6 @@ gameContainer.addEventListener("click", () => {
       break;
   }
 });
-// To use space bar or up arrow
-// document.addEventListener('keydown', (e) => {
-//     if((e.keyCode == 32) || (e.keyCode == 38)) {
-//     }
-// });
-
 // Game functions
 function startGame() {
   //reset all game variables
@@ -59,10 +53,6 @@ function startGame() {
   //start game
   gameStatus = "on";
   render();
-  msgDiv.innerHTML = `<h2>Escape the Laser!</h2>(Click to jump)`;
-  setTimeout(() => {
-    msgDiv.classList = "msg off";
-  }, 3000);
 }
 
 function jump() {
@@ -80,22 +70,6 @@ function render() {
   //   delta time
   const dt = Math.min(32, Math.max(8, thisTime - lastTime)) / 16.666;
   lastTime = thisTime;
-
-  // semi render for the end fall
-
-  if (gameStatus === "dead") {
-    if (player.y > 0) {
-      player.y = Math.max(0, player.y + player.v * dt);
-      player.v -= g * dt;
-      playerDiv.style.setProperty("--player-y", 320 - player.y + "px");
-      requestAnimationFrame(render);
-    } else {
-      gameStatus = "end";
-      msgDiv.innerHTML += `Click to restart`;
-    }
-    return false;
-  }
-
   // render buildings
   if (nextBuildingX < gameProgress + 960 + speed * dt) {
     createBuilding();
@@ -139,15 +113,14 @@ function render() {
 
   playerDiv.classList = `player ${player.v === 0 ? "run" : "jump"}`;
 
-  let nextPlayerX = player.x + speed * dt;
+  let nextPlayerX = player.x + speed;
 
   if (nextPlayerX - gameProgress < 720) {
-    nextPlayerX += (1 / speed) * dt;
+    nextPlayerX += 1 / speed;
   }
 
   if (nextPlayerX > nextBuilding.x && nextBuilding.height > player.y) {
     nextPlayerX = nextBuilding.x;
-    playerDiv.classList = "player idle";
   }
 
   player.x = nextPlayerX;
@@ -158,36 +131,16 @@ function render() {
   // TODO restart here https://www.youtube.com/watch?v=atxvy-FVz4Y
   // render road
   // render distroy buildings
-  destroyBuildings.forEach((ix) => {
-    const thisDiv = buildings[ix].div;
-    thisDiv.classList.add("distroy");
-    setTimeout(() => {
-      thisDiv.parentNode.removeChild(thisDiv);
-    }, 1000);
-    if (
-      player.x <= buildings[ix].x + buildings[ix].width &&
-      player.y <= buildings[ix].height
-    ) {
-      gameStatus = "dead";
-      playerDiv.classList = "player dead";
-      msgDiv.innerHTML = `<h2> Got Ya ! </h2>`;
-      msgDiv.classList = "msg";
-    } else {
-      buildings.splice(ix, 1);
-      score++;
-    }
-  });
-
   // /////////render set progress and re render
   // increase speed
-  // console.log({ dt });
-  speed += 0.001 * dt;
+  // speed += 0.001 * dt;
   // // game progress set to speed
-  gameProgress += speed * dt;
-  // render score
-  scoreDiv.innerHTML = `Score: ${score}`;
+  // gameProgress += speed * dt;
+  // console.log({ dt });
+  speed += 0.001;
+  gameProgress += speed;
 
-  if (gameStatus === "on" || gameStatus === "dead") {
+  if (gameStatus === "on") {
     requestAnimationFrame(render);
   }
 }
